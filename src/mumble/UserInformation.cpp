@@ -38,6 +38,7 @@
 #include "Net.h"
 #include "ServerHandler.h"
 #include "ViewCert.h"
+#include "ClientUser.h"
 
 static QString decode_utf8_qssl_string(const QString &input) {
 	QString i = input;
@@ -68,10 +69,38 @@ UserInformation::UserInformation(const MumbleProto::UserStats &msg, QWidget *p) 
 	resize(sizeHint());
 
 	qfCertificateFont = qlCertificate->font();
+
+    currentUser = ClientUser::get(uiSession);
+    qWarning("ClientUser = %d\n", currentUser);
+    if(currentUser){
+        qWarning("user gain slider connected : %f",currentUser->fLocalGain);
+        qlGainLevel->setValue((int)(currentUser->fLocalGain * 100));
+        if(currentUser->bLocalGained){
+            qlGainUse->setChecked(true);
+        }else{
+            qlGainUse->setChecked(false);
+        }
+        connect(qlGainLevel,SIGNAL(valueChanged(int)),this,SLOT(gainChanged(int)));
+        connect(qlGainUse,SIGNAL(stateChanged(int)),this, SLOT(gainCheckClicked(int)));
+    }
+
 }
 
 unsigned int UserInformation::session() const {
 	return uiSession;
+}
+void UserInformation::gainChanged(int value){
+    qWarning("value : %d\n",value);
+//   currentUser->bLocalGained = true;
+   currentUser->fLocalGain = ((float) value)/100.0;
+}
+void UserInformation::gainCheckClicked(int state){
+    qWarning("checkbox change value: %d", state) ;
+    if(state){
+        currentUser->bLocalGained = true;
+    }else{
+        currentUser->bLocalGained = false;
+    }
 }
 
 void UserInformation::tick() {

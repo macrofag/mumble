@@ -53,6 +53,9 @@ class ClientUser : public QObject, public User {
 		bool bLocalIgnore;
 		bool bLocalMute;
 
+      bool bLocalGained;
+      float fLocalGain;
+
 		float fPowerMin, fPowerMax;
 		float fAverageAvailable;
 

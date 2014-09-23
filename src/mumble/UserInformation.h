@@ -36,12 +36,14 @@
 #include "Message.h"
 
 #include "ui_UserInformation.h"
+#include "ClientUser.h"
 
 namespace MumbleProto {
 class UserStats;
 }
 
 class QTimer;
+
 
 class UserInformation : public QDialog, Ui::UserInformation {
 	private:
@@ -51,12 +53,15 @@ class UserInformation : public QDialog, Ui::UserInformation {
 		bool bRequested;
 		unsigned int uiSession;
 		QTimer *qtTimer;
+      ClientUser *currentUser;
 		QList<QSslCertificate> qlCerts;
 		static QString secsToString(unsigned int secs);
 		QFont qfCertificateFont;
 	protected slots:
 		void tick();
 		void on_qpbCertificate_clicked();
+      void gainChanged(int);
+      void gainCheckClicked(int);
 	public:
 		UserInformation(const MumbleProto::UserStats &msg, QWidget *p = NULL);
 		void update(const MumbleProto::UserStats &msg);
