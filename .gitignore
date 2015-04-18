@@ -30,3 +30,5 @@ src/murmur/murmurd_plugin_import.cpp
 doc/doxygen/
 .qmake.cache
 .qmake.stash
+build_script_tmp.sh
+
